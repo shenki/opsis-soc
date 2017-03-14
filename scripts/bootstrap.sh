@@ -38,12 +38,12 @@ fi
 
 yn=y
 #read -p "Need to install packages as root. Continue? (y/n) " yn
-if [ "$yn" = "y" -o "$yn" = "Y" -o -z "$yn" ]; then
-  sudo -E ./scripts/download-env-root.sh || exit 1
-else
-  echo "Aborting.."
-  exit 1
-fi
+#if [ "$yn" = "y" -o "$yn" = "Y" -o -z "$yn" ]; then
+#  sudo -E ./scripts/download-env-root.sh || exit 1
+#else
+#  echo "Aborting.."
+#  exit 1
+#fi
 ./scripts/download-env.sh || exit 1
 
 # Check to see whether they've installed a Xilinx license file yet

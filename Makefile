@@ -66,7 +66,7 @@ third_party/%/.git: .gitmodules
 # Image - a combination of multiple parts (gateware+bios+firmware+more?)
 # --------------------------------------
 image:
-	$(PYTHON) mkimage.py
+	$(PYTHON) mkimage.py --override-firmware=none
 
 image-load: image image-load-$(PLATFORM)
 	@true
