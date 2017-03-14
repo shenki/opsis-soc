@@ -8,12 +8,15 @@ from litex.gen import *
 from litex.gen.genlib.resetsync import AsyncResetSynchronizer
 
 from litex.soc.cores.flash import spi_flash
+from litex.soc.integration.soc_core import mem_decoder
 from litex.soc.integration.soc_sdram import *
 from litex.soc.integration.builder import *
 
 from litedram.modules import MT46H32M16
 from litedram.phy import s6ddrphy
 from litedram.core import ControllerSettings
+
+from gateware.sdcard import SDCard
 
 from gateware import info
 from gateware import cas
@@ -183,6 +186,11 @@ class BaseSoC(SoCSDRAM):
     )
     csr_map_update(SoCSDRAM.csr_map, csr_peripherals)
 
+    mem_map = {
+            "sdcard": 0x50000000,  # (shadow @0xd0000000)
+    }
+    mem_map.update(SoCSDRAM.mem_map)
+
     def __init__(self, platform, **kwargs):
         clk_freq = (83 + Fraction(1, 3))*1000*1000
         SoCSDRAM.__init__(self, platform, clk_freq,
@@ -225,6 +233,16 @@ class BaseSoC(SoCSDRAM):
             self.ddrphy.clk4x_wr_strb.eq(self.crg.clk4x_wr_strb),
             self.ddrphy.clk4x_rd_strb.eq(self.crg.clk4x_rd_strb),
         ]
+
+        # sdcard
+        self.submodules.sdcard = SDCard(platform, platform.request("mmc"))
+        self.add_wb_master(self.sdcard.master)
+
+        self.add_wb_slave(mem_decoder(self.mem_map["sdcard"]),
+                          self.sdcard.slave)
+        self.add_memory_region("sdcard",
+                               self.mem_map["sdcard"] + self.shadow_base,
+                               0x2000)
 
         self.submodules.cas = cas.ControlAndStatus(platform, clk_freq)
 
