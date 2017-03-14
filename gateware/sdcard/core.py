@@ -3,8 +3,7 @@ import os
 from litex.gen import *
 from litex.soc.interconnect import wishbone
 
-
-class SDCARD(Module):
+class SDCard(Module):
     def __init__(self, platform, pads):
         self.master = master = wishbone.Interface()
         self.slave = slave = wishbone.Interface()
@@ -34,7 +33,7 @@ class SDCARD(Module):
             slave_adr_i[2:].eq(self.slave.adr)
 
         ]
-        
+
         self.comb += [
             self.cmd.o.eq(self.cmd_o),
             self.cmd.oe.eq(self.cmd_oe),
@@ -42,7 +41,7 @@ class SDCARD(Module):
 
             self.dat.o.eq(self.dat_o),
             self.dat.oe.eq(self.dat_oe),
-            
+
             self.dat_i.eq(self.dat.i),
             pads.clk.eq(self.sd_clk)
         ]
@@ -62,7 +61,7 @@ class SDCARD(Module):
                             i_wb_cyc_i=slave.cyc,
                             i_wb_stb_i=slave.stb,
                             o_wb_ack_o=slave.ack,
-                                  
+
                             # Wishbone master
                             o_m_wb_dat_o=master.dat_w,
                             i_m_wb_dat_i=master.dat_r,
