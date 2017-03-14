@@ -71,7 +71,7 @@ _io = [
     ("user_led", 7, Pins("T18"), IOStandard("LVCMOS33"), Drive(8)),
 
     ("mmc", 0,
-        Subsignal("dat", Pins("K14 G18 J13 L13"), IOStandard("LVCMOS33"),
+        Subsignal("d", Pins("K14 G18 J13 L13"), IOStandard("LVCMOS33"),
                   Misc("SLEW=FAST")),
 
         Subsignal("cmd", Pins("G16"), IOStandard("LVCMOS33"),
